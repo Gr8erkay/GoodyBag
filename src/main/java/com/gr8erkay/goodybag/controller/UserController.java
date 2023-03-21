@@ -52,7 +52,7 @@ public class UserController {
         ApiResponse<UserResponseDto> apiResponse = new ApiResponse<>();
         apiResponse.setData(foundUser);
         apiResponse.setStatusCode("00");
-        apiResponse.setMessage("user fetch");
+        apiResponse.setMessage("user fetchAllGoodsByUserId");
 
         return ResponseEntity.status(200).body(apiResponse);
     }
@@ -64,7 +64,7 @@ public class UserController {
         ApiResponse<UserResponseDto> apiResponse = new ApiResponse<>();
         apiResponse.setData(listOfUsers);
         apiResponse.setStatusCode("00");
-        apiResponse.setMessage("user fetch");
+        apiResponse.setMessage("user fetchAllGoodsByUserId");
 
         return ResponseEntity.status(200).body(apiResponse);
     }

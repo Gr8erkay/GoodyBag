@@ -135,6 +135,17 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
+    public List<GoodsResponseDto> searchGoods(String text) {
+        List<Goods> goodsList = goodsRepository.searchBy(text);
+        List<GoodsResponseDto> listOfGoods = new ArrayList<>();
+        for (Goods goods: goodsList
+             ) {
+            listOfGoods.add(mapToDto(goods));
+        }
+        return listOfGoods;
+    }
+
+    @Override
     public List<GoodsResponseDto> fetchAllGoodsByCategory(Category category) {
         List<Goods> goods = goodsRepository.findAllByCategory(category);
         return getGoodsResponseDto(goods);

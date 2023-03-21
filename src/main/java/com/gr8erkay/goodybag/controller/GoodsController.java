@@ -7,15 +7,11 @@ import com.gr8erkay.goodybag.dto.response.GoodsResponse;
 import com.gr8erkay.goodybag.dto.response.GoodsResponseDto;
 import com.gr8erkay.goodybag.enums.AppConstants;
 import com.gr8erkay.goodybag.enums.Category;
-import com.gr8erkay.goodybag.model.Goods;
 import com.gr8erkay.goodybag.repository.GoodsRepository;
 import com.gr8erkay.goodybag.service.GoodsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,13 +42,13 @@ public class GoodsController {
     }
 
     @GetMapping(path = "{goodsId}/goods/details")
-    public ResponseEntity<Object> fetchUserById(@PathVariable Long goodsId) {
+    public ResponseEntity<Object> fetchGoodsById(@PathVariable Long goodsId) {
         GoodsResponseDto goodsFound = goodsService.fetchGoodsById(goodsId);
 
         ApiResponse<GoodsResponseDto> apiResponse = new ApiResponse<>();
         apiResponse.setData(goodsFound);
         apiResponse.setStatusCode("00");
-        apiResponse.setMessage("user fetch");
+        apiResponse.setMessage("user fetchAllGoodsByUserId");
 
         return ResponseEntity.status(200).body(apiResponse);
     }
@@ -64,19 +60,19 @@ public class GoodsController {
         ApiResponse<GoodsResponseDto> apiResponse = new ApiResponse<>();
         apiResponse.setData(listOfGoods);
         apiResponse.setStatusCode("00");
-        apiResponse.setMessage("user fetch");
+        apiResponse.setMessage("user fetchAllGoodsByUserId");
 
         return ResponseEntity.status(200).body(apiResponse);
     }
 
     @GetMapping(path = "{userId}/goods/details")
-    public ResponseEntity<Object> fetch(@PathVariable Long userId) {
+    public ResponseEntity<Object> fetchAllGoodsByUserId(@PathVariable Long userId) {
         GoodsResponseDto listOfGoods = (GoodsResponseDto) goodsService.fetchAllGoodsByUserId(userId);
 
         ApiResponse<GoodsResponseDto> apiResponse = new ApiResponse<>();
         apiResponse.setData(listOfGoods);
         apiResponse.setStatusCode("00");
-        apiResponse.setMessage("user fetch");
+        apiResponse.setMessage("All goods by this user");
 
         return ResponseEntity.status(200).body(apiResponse);
     }
@@ -90,5 +86,10 @@ public class GoodsController {
 
 
         return goodsService.fetchAllGoods(pageNo, pageSize,sortBy, sortDir);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<GoodsResponseDto>> searchGoods(@RequestParam("text") String text) {
+        return ResponseEntity.ok(goodsService.searchGoods(text));
     }
 }

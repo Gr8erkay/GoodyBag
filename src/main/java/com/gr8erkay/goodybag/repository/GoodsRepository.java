@@ -16,6 +16,10 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
     @Query(value = "SELECT * from Goods g WHERE g.userId = ?", nativeQuery = true)
     List<Goods> fetchAllGoodsByUserId(Long userId);
 
+    @Query(value = "SELECT g from Goods g WHERE " + "g.title LIKE CONCAT ('%', :query, '%')" + "OR g.description LIKE CONCAT ('%', :query, '%')")
+    List<Goods> searchBy(String text);
+
+
     List<Goods> findAllByUserId(Long userId);
 
     List<Goods> findAll();

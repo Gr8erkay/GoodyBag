@@ -18,6 +18,8 @@ public interface GoodsService {
 
     GoodsResponse fetchAllGoods(int pageNo, int pageSize, String sortBy, String sortDir);
 
+    List<GoodsResponseDto> searchGoods(String text);
+
 
     List<GoodsResponseDto> fetchAllGoodsByCategory(Category category);
 
