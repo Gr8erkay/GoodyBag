@@ -2,6 +2,7 @@ package com.gr8erkay.goodybag.service.serviceimplentaion;
 
 import com.gr8erkay.goodybag.dto.request.GoodsRequestDto;
 import com.gr8erkay.goodybag.dto.request.UserRequestDto;
+import com.gr8erkay.goodybag.dto.response.GoodsResponse;
 import com.gr8erkay.goodybag.dto.response.GoodsResponseDto;
 import com.gr8erkay.goodybag.enums.Category;
 import com.gr8erkay.goodybag.model.Goods;
@@ -14,6 +15,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -110,14 +112,26 @@ public class GoodsServiceImpl implements GoodsService {
 
 
     @Override
-    public List<GoodsResponseDto> fetchAllGoods(int pageNo, int pageSize) {
+    public GoodsResponse fetchAllGoods(int pageNo, int pageSize, String sortBy, String sortDir) {
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Sort sort = sortDir.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
 
+        //Create a Pageable instance
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+
+        //Get content for page object
         Page<Goods> goodsList = goodsRepository.findAll(pageable);
 
         List<Goods> listOfGoods = goodsList.getContent();
-        return listOfGoods.stream().map(this::mapToDto).collect(Collectors.toList());
+        List<GoodsResponseDto> content = listOfGoods.stream().map(this::mapToDto).collect(Collectors.toList());
+        GoodsResponse goodsResponse = new GoodsResponse();
+        goodsResponse.setContent(content);
+        goodsResponse.setPageNo(goodsList.getNumber());
+        goodsResponse.setPageSize(goodsList.getSize());
+        goodsResponse.setTotalElement(goodsList.getTotalElements());
+        goodsResponse.setLast(goodsList.isLast());
+        return goodsResponse;
     }
 
     @Override

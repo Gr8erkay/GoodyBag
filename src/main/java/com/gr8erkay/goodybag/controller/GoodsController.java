@@ -3,7 +3,9 @@ package com.gr8erkay.goodybag.controller;
 
 import com.gr8erkay.goodybag.dto.request.GoodsRequestDto;
 import com.gr8erkay.goodybag.dto.response.ApiResponse;
+import com.gr8erkay.goodybag.dto.response.GoodsResponse;
 import com.gr8erkay.goodybag.dto.response.GoodsResponseDto;
+import com.gr8erkay.goodybag.enums.AppConstants;
 import com.gr8erkay.goodybag.enums.Category;
 import com.gr8erkay.goodybag.model.Goods;
 import com.gr8erkay.goodybag.repository.GoodsRepository;
@@ -79,12 +81,14 @@ public class GoodsController {
         return ResponseEntity.status(200).body(apiResponse);
     }
     @GetMapping
-    public List<GoodsResponseDto> fetchAllGoods(
-            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
-            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    public GoodsResponse fetchAllGoods(
+            @RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.DEFAULT_SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.DEFAULT_SORT_DIR, required = false) String sortDir
     ){
 
 
-        return goodsService.fetchAllGoods(pageNo, pageSize);
+        return goodsService.fetchAllGoods(pageNo, pageSize,sortBy, sortDir);
     }
 }

@@ -2,6 +2,7 @@ package com.gr8erkay.goodybag.service;
 
 import com.gr8erkay.goodybag.dto.request.GoodsRequestDto;
 import com.gr8erkay.goodybag.dto.request.UserRequestDto;
+import com.gr8erkay.goodybag.dto.response.GoodsResponse;
 import com.gr8erkay.goodybag.dto.response.GoodsResponseDto;
 import com.gr8erkay.goodybag.enums.Category;
 
@@ -15,7 +16,7 @@ public interface GoodsService {
 
     GoodsResponseDto buyGoods(Long goodsId, GoodsRequestDto goodsRequest, UserRequestDto userRequest);
 
-    List<GoodsResponseDto> fetchAllGoods(int pageNo, int pageSize);
+    GoodsResponse fetchAllGoods(int pageNo, int pageSize, String sortBy, String sortDir);
 
 
     List<GoodsResponseDto> fetchAllGoodsByCategory(Category category);
