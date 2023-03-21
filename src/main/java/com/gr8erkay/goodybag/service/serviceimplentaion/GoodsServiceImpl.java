@@ -11,12 +11,16 @@ import com.gr8erkay.goodybag.repository.UserRepository;
 import com.gr8erkay.goodybag.service.GoodsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -106,9 +110,14 @@ public class GoodsServiceImpl implements GoodsService {
 
 
     @Override
-    public List<GoodsResponseDto> findAll() {
-        List<Goods> goods = goodsRepository.findAll();
-        return getGoodsResponseDto(goods);
+    public List<GoodsResponseDto> fetchAllGoods(int pageNo, int pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+        Page<Goods> goodsList = goodsRepository.findAll(pageable);
+
+        List<Goods> listOfGoods = goodsList.getContent();
+        return listOfGoods.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Override
@@ -130,6 +139,17 @@ public class GoodsServiceImpl implements GoodsService {
         }
         return requests;
     }
+    public GoodsResponseDto mapToDto(Goods goods) {
+
+        return GoodsResponseDto.builder()
+                .title(goods.getTitle())
+                .description(goods.getDescription())
+                .quantity(goods.getQuantity())
+                .unitPrice(goods.getPrice())
+                .category(goods.getCategory())
+                .build();
+    }
+
 
     @Override
     public List<GoodsResponseDto> fetchAllGoodsByUserId(Long userId) {

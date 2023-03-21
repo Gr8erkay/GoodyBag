@@ -35,10 +35,9 @@ public class UserServiceImpl implements UserService {
         log.info("about saving");
         User saveUser = userRepository.save(user);
         log.info("saved user");
-        return new UserResponseDto(saveUser.getFirstName(),saveUser.getLastName(),
-                saveUser.getUserName(), saveUser.getEmail(),
-                saveUser.getPhoneNumber());
-    }
+        UserResponseDto answer = new UserResponseDto(saveUser.getFirstName(), saveUser.getLastName(), saveUser.getUserName(), saveUser.getEmail(), saveUser.getPhoneNumber(), saveUser.getAccountBalance());
+
+        return answer;}
 
     @Override
     public UserResponseDto fetchUserById(Long userId) {
@@ -84,10 +83,11 @@ public class UserServiceImpl implements UserService {
            user1.setPhoneNumber(request.getPhoneNumber());
        }
         User updatedUser = userRepository.save(user1);
+       UserResponseDto answer = new UserResponseDto(updatedUser.getFirstName(),updatedUser.getLastName(),
+               updatedUser.getUserName(),updatedUser.getEmail(), updatedUser.getPhoneNumber(), updatedUser.getAccountBalance());
 
-        return new UserResponseDto(updatedUser.getFirstName(),updatedUser.getLastName(),
-                updatedUser.getUserName(),updatedUser.getEmail(), updatedUser.getPhoneNumber());
-    }
+
+        return answer;}
 
 
     @Override

@@ -5,20 +5,27 @@ import com.gr8erkay.goodybag.dto.request.GoodsRequestDto;
 import com.gr8erkay.goodybag.dto.response.ApiResponse;
 import com.gr8erkay.goodybag.dto.response.GoodsResponseDto;
 import com.gr8erkay.goodybag.enums.Category;
+import com.gr8erkay.goodybag.model.Goods;
+import com.gr8erkay.goodybag.repository.GoodsRepository;
 import com.gr8erkay.goodybag.service.GoodsService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping(path = "/goods")
 @RequiredArgsConstructor
 public class GoodsController {
+    private final GoodsRepository goodsRepository;
 
     private final GoodsService goodsService;
 
@@ -70,5 +77,14 @@ public class GoodsController {
         apiResponse.setMessage("user fetch");
 
         return ResponseEntity.status(200).body(apiResponse);
+    }
+    @GetMapping
+    public List<GoodsResponseDto> fetchAllGoods(
+            @RequestParam(value = "pageNo", defaultValue = "0", required = false) int pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
+    ){
+
+
+        return goodsService.fetchAllGoods(pageNo, pageSize);
     }
 }

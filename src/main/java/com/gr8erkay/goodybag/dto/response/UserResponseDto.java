@@ -2,10 +2,13 @@ package com.gr8erkay.goodybag.dto.response;
 
 import lombok.*;
 
+@Getter
+@Setter
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+//@RequiredArgsConstructor
 public class UserResponseDto {
 
     private String firstName;
@@ -20,6 +23,6 @@ public class UserResponseDto {
 
     private Double accountBalance;
 
-    public UserResponseDto(String firstName, String lastName, String userName, String email, String phoneNumber) {
-    }
+//    public UserResponseDto(String firstName, String lastName, String userName, String email, String phoneNumber) {
+//    }
 }

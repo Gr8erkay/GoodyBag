@@ -3,6 +3,7 @@ package com.gr8erkay.goodybag.controller;
 import com.gr8erkay.goodybag.dto.request.UserRequestDto;
 import com.gr8erkay.goodybag.dto.response.ApiResponse;
 import com.gr8erkay.goodybag.dto.response.UserResponseDto;
+import com.gr8erkay.goodybag.model.User;
 import com.gr8erkay.goodybag.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +24,25 @@ public class UserController {
     public ResponseEntity<?> createUser(@RequestBody @Valid UserRequestDto request) {
         log.info("create user call for name: {}", request.getFirstname());
         UserResponseDto response =  userService.createUser(request);
+        log.info("response: {}", response.toString());
+        System.out.println(response);
+//        UserResponseDto user = response;
 
         //Using constructor
         ApiResponse<UserResponseDto> apiResponse = new ApiResponse<>();
         apiResponse.setData(response);
-        apiResponse.setStatusCode("00");
+        apiResponse.setStatusCode("201");
         apiResponse.setMessage("user created successfully");
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+//        UserResponseDto newBoy = new UserResponseDto();
+//        newBoy.setAccountBalance(100000.00);
+//        newBoy.setUserName(request.getUserName());
+//        newBoy.setFirstName(request.getFirstname());
+//        newBoy.setEmail(request.getEmail());
+//        newBoy.setLastName(request.getLastName());
+//        newBoy.setPhoneNumber(request.getPhoneNumber());
+
+        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
 
     @GetMapping(path = "{userId}/user/details")
