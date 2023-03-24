@@ -13,10 +13,10 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
     List<Goods> findAllByCategory(Category category);
 
 
-    @Query(value = "SELECT * from Goods g WHERE g.userId = ?", nativeQuery = true)
+    @Query(value = "SELECT * from Goods g WHERE g.user_id = ?", nativeQuery = true)
     List<Goods> fetchAllGoodsByUserId(Long userId);
 
-    @Query(value = "SELECT g from Goods g WHERE " + "g.title LIKE CONCAT ('%', :query, '%')" + "OR g.description LIKE CONCAT ('%', :query, '%')")
+    @Query(value = "SELECT * from goods g WHERE g.category LIKE ?1 or g.description LIKE ?1 ", nativeQuery = true)
     List<Goods> searchBy(String text);
 
 
