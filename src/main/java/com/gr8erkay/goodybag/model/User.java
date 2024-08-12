@@ -21,7 +21,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "user_id")
+    private Long id;
 
     @Column(nullable = false, length = 50)
     private String firstName;
@@ -50,7 +51,9 @@ public class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @OneToMany
-    @Column
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private List<Goods> goods;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Cart> carts;
 }

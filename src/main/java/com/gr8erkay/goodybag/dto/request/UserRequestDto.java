@@ -32,8 +32,6 @@ public class UserRequestDto {
     private String email;
 
     @NotBlank(message = "phoneNumber is required")
-    @Min(11)
-    @Max(11)
     @Column(nullable = false)
     private String phoneNumber;
 

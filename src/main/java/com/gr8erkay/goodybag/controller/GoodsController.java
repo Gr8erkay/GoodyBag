@@ -36,45 +36,45 @@ public class GoodsController {
         ApiResponse<GoodsResponseDto> apiResponse = new ApiResponse<>();
         apiResponse.setData(response);
         apiResponse.setStatusCode("00");
-        apiResponse.setMessage("user created successfully");
+        apiResponse.setMessage("goods added successfully");
 
         return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
 
-    @GetMapping(path = "{goodsId}/goods/details")
+    @GetMapping(path = "/goods/{goodsId}/details")
     public ResponseEntity<Object> fetchGoodsById(@PathVariable Long goodsId) {
         GoodsResponseDto goodsFound = goodsService.fetchGoodsById(goodsId);
 
         ApiResponse<GoodsResponseDto> apiResponse = new ApiResponse<>();
         apiResponse.setData(goodsFound);
         apiResponse.setStatusCode("00");
-        apiResponse.setMessage("user fetchAllGoodsByUserId");
+        apiResponse.setMessage("Goods details fetched successfully");
 
-        return ResponseEntity.status(200).body(apiResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
-    @GetMapping(path = "{category}/goods/details")
-    public ResponseEntity<Object> fetchUserByCategory(@PathVariable Category category) {
-        GoodsResponseDto listOfGoods = (GoodsResponseDto) goodsService.fetchAllGoodsByCategory(category);
+    @GetMapping(path = "/goods/category/{category}/details")
+    public ResponseEntity<Object> fetchGoodsByCategory(@PathVariable Category category) {
+        List<GoodsResponseDto> listOfGoods = goodsService.fetchAllGoodsByCategory(category);
 
-        ApiResponse<GoodsResponseDto> apiResponse = new ApiResponse<>();
+        ApiResponse<List<GoodsResponseDto>> apiResponse = new ApiResponse<>();
         apiResponse.setData(listOfGoods);
         apiResponse.setStatusCode("00");
-        apiResponse.setMessage("user fetchAllGoodsByUserId");
+        apiResponse.setMessage("Goods by category fetched successfully");
 
-        return ResponseEntity.status(200).body(apiResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
 
-    @GetMapping(path = "{userId}/goods/details")
+    @GetMapping(path = "/user/{userId}/goods/details")
     public ResponseEntity<Object> fetchAllGoodsByUserId(@PathVariable Long userId) {
-        GoodsResponseDto listOfGoods = (GoodsResponseDto) goodsService.fetchAllGoodsByUserId(userId);
+        List<GoodsResponseDto> listOfGoods = goodsService.fetchAllGoodsByUserId(userId);
 
-        ApiResponse<GoodsResponseDto> apiResponse = new ApiResponse<>();
+        ApiResponse<List<GoodsResponseDto>> apiResponse = new ApiResponse<>();
         apiResponse.setData(listOfGoods);
         apiResponse.setStatusCode("00");
-        apiResponse.setMessage("All goods by this user");
+        apiResponse.setMessage("All goods by user fetched successfully");
 
-        return ResponseEntity.status(200).body(apiResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(apiResponse);
     }
     @GetMapping
     public GoodsResponse fetchAllGoods(

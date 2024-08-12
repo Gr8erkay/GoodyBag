@@ -20,9 +20,8 @@ public class Goods {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long goodsId;
-
-    private Long userId;
+    @Column(name = "goods_id")
+    private Long id;
 
     @Column(nullable = false, length = 50)
     private String title;
@@ -47,4 +46,9 @@ public class Goods {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private User user;
+
 }

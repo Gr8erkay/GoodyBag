@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping(path = "/user")
@@ -59,9 +61,9 @@ public class UserController {
 
     @GetMapping(path = "/user/listOfUsers")
     public ResponseEntity<Object> fetchAllUsers() {
-        UserResponseDto listOfUsers = (UserResponseDto) userService.findAll();
+        List<UserResponseDto> listOfUsers = userService.findAll();
 
-        ApiResponse<UserResponseDto> apiResponse = new ApiResponse<>();
+        ApiResponse<List<UserResponseDto>> apiResponse = new ApiResponse<>();
         apiResponse.setData(listOfUsers);
         apiResponse.setStatusCode("00");
         apiResponse.setMessage("user fetchAllGoodsByUserId");

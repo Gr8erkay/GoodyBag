@@ -59,8 +59,9 @@ public class UserServiceImpl implements UserService {
     public List<UserResponseDto> findAll() {
         List<User> users = userRepository.findAll();
         List<UserResponseDto> requests = new ArrayList<>();
-        UserResponseDto userResponseDto = new UserResponseDto();
+
         for (User user : users) {
+            UserResponseDto userResponseDto = new UserResponseDto();
             userResponseDto.setFirstName(user.getFirstName());
             userResponseDto.setLastName(user.getLastName());
             userResponseDto.setUserName(user.getUserName());

@@ -16,7 +16,7 @@ public interface GoodsRepository extends JpaRepository<Goods, Long> {
     @Query(value = "SELECT * from Goods g WHERE g.user_id = ?", nativeQuery = true)
     List<Goods> fetchAllGoodsByUserId(Long userId);
 
-    @Query(value = "SELECT * from goods g WHERE g.category LIKE ?1 or g.description LIKE ?1 ", nativeQuery = true)
+    @Query(value = "SELECT * from goods g WHERE g.category LIKE ?1 or g.description LIKE ?1 or g.title LIKE ?1", nativeQuery = true)
     List<Goods> searchBy(String text);
 
 

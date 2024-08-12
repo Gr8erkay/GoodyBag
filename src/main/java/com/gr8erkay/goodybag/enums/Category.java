@@ -2,5 +2,5 @@ package com.gr8erkay.goodybag.enums;
 
 public enum Category {
 
-    EDIBLES, ELECTRONICS, AUTOMOBILE, LUXURY, OTHERS
+    HOUSE, HOTEL, SHORT_LET, EDIBLES, ELECTRONICS, AUTOMOBILE, LUXURY, OTHERS
 }

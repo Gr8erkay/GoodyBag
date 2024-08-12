@@ -1,7 +1,12 @@
 package com.gr8erkay.goodybag.dto.response;
 
 import com.gr8erkay.goodybag.enums.Category;
+import com.gr8erkay.goodybag.enums.Status;
+import com.gr8erkay.goodybag.model.User;
+import jakarta.persistence.Column;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -17,10 +22,16 @@ public class GoodsResponseDto {
 
     private Double unitPrice;
 
+    private Status status;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
     private Category category;
 
     private Double totalPrice;
 
-    public GoodsResponseDto(String title, String description, Integer quantity, Double price, Category category) {
-    }
+    private String userName;
+
 }

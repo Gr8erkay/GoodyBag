@@ -5,6 +5,7 @@ import com.gr8erkay.goodybag.dto.request.UserRequestDto;
 import com.gr8erkay.goodybag.dto.response.GoodsResponse;
 import com.gr8erkay.goodybag.dto.response.GoodsResponseDto;
 import com.gr8erkay.goodybag.enums.Category;
+import com.gr8erkay.goodybag.exception.ResourceNotFoundException;
 import com.gr8erkay.goodybag.model.Goods;
 import com.gr8erkay.goodybag.model.User;
 import com.gr8erkay.goodybag.repository.GoodsRepository;
@@ -12,6 +13,7 @@ import com.gr8erkay.goodybag.repository.UserRepository;
 import com.gr8erkay.goodybag.service.GoodsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +33,11 @@ public class GoodsServiceImpl implements GoodsService {
     private final UserRepository userRepository;
     private final GoodsRepository goodsRepository;
 
-
+    @Autowired
+    public GoodsServiceImpl(GoodsRepository goodsRepository, UserRepository userRepository) {
+        this.goodsRepository = goodsRepository;
+        this.userRepository = userRepository;
+    }
     @Override
     public GoodsResponseDto createGoods(GoodsRequestDto request) {
         log.info("service:: about setting");
@@ -40,16 +46,32 @@ public class GoodsServiceImpl implements GoodsService {
         goods.setDescription(request.getDescription());
         goods.setQuantity(request.getQuantity());
         goods.setPrice(request.getUnitPrice());
+        goods.setStatus(request.getStatus());
         goods.setCategory(request.getCategory());
         goods.setCreatedAt(LocalDateTime.now());
         goods.setUpdatedAt(LocalDateTime.now());
 
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        goods.setUser(user);
+
         log.info("about saving");
         Goods saveGoods = goodsRepository.save(goods);
+        log.info(saveGoods.toString());
         log.info("saved goods");
-        return new GoodsResponseDto(saveGoods.getTitle(),saveGoods.getDescription(),
-                saveGoods.getQuantity(), saveGoods.getPrice(),
-                saveGoods.getCategory());
+
+        GoodsResponseDto goodsResponseDto = new GoodsResponseDto();
+        goodsResponseDto.setTitle(saveGoods.getTitle());
+        goodsResponseDto.setDescription(saveGoods.getDescription());
+        goodsResponseDto.setQuantity(saveGoods.getQuantity());
+        goodsResponseDto.setUnitPrice(saveGoods.getPrice());
+        goodsResponseDto.setStatus(saveGoods.getStatus());
+        goodsResponseDto.setCategory(saveGoods.getCategory());
+        goodsResponseDto.setCreatedAt(saveGoods.getCreatedAt());
+        goodsResponseDto.setUpdatedAt(saveGoods.getUpdatedAt());
+        goodsResponseDto.setUserName(saveGoods.getUser().getUserName());
+        return goodsResponseDto;
     }
 
     @Override
@@ -62,6 +84,9 @@ public class GoodsServiceImpl implements GoodsService {
             goodsResponseDto.setDescription(g.getDescription());
             goodsResponseDto.setQuantity(g.getQuantity());
             goodsResponseDto.setUnitPrice(g.getPrice());
+//            goodsResponseDto.setUser(g.getUser());
+        } else {
+            throw new RuntimeException("Goods with ID " + goodsId + " not found");
         }
 
         return goodsResponseDto;
@@ -77,7 +102,7 @@ public class GoodsServiceImpl implements GoodsService {
             int purchaseQuantity = goodsRequest.getPurchaseQuantity();
 
             if (availableQuantity >= purchaseQuantity) {
-                Optional<User> optionalSeller = userRepository.findById(goods.getUserId());
+                Optional<User> optionalSeller = userRepository.findById(goods.getId());
                 Optional<User> optionalBuyer = userRepository.findUserByUserName(userRequest.getUserName());
 
                 if (optionalSeller.isPresent() && optionalBuyer.isPresent()) {
@@ -153,8 +178,9 @@ public class GoodsServiceImpl implements GoodsService {
 
     private List<GoodsResponseDto> getGoodsResponseDto(List<Goods> goods1) {
         List<GoodsResponseDto> requests = new ArrayList<>();
-        GoodsResponseDto goodsResponseDto = new GoodsResponseDto();
+
         for (Goods good : goods1) {
+            GoodsResponseDto goodsResponseDto = new GoodsResponseDto();
             goodsResponseDto.setTitle(good.getTitle());
             goodsResponseDto.setDescription(good.getDescription());
             goodsResponseDto.setQuantity(good.getQuantity());
@@ -186,7 +212,7 @@ public class GoodsServiceImpl implements GoodsService {
     public GoodsResponseDto updateGoods(Long goodsId, GoodsRequestDto request) {
         Optional<Goods> goods = goodsRepository.findById(goodsId);
         Goods goods1 = new Goods();
-        if (goods.isPresent()){
+        if (goods.isPresent()) {
             goods1 = goods.get();
             goods1.setTitle(request.getTitle());
             goods1.setDescription(request.getDescription());
@@ -196,11 +222,10 @@ public class GoodsServiceImpl implements GoodsService {
             goods1.setUpdatedAt(LocalDateTime.now());
         }
         Goods updatedGoods = goodsRepository.save(goods1);
-
-        return new GoodsResponseDto(updatedGoods.getTitle(),updatedGoods.getDescription(),
-                updatedGoods.getQuantity(),updatedGoods.getPrice(), updatedGoods.getCategory());
+        GoodsResponseDto update = new GoodsResponseDto();
+//        update.setUser(updatedGoods.getUser());
+        return update;
     }
-
     @Override
     public void deleteGoods(Long goodsId) {
         Optional<Goods> goods = goodsRepository.findById(goodsId);
